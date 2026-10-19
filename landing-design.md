@@ -331,6 +331,69 @@ Neutral Color는 명확한 명도 단계를 만들어 정보의 위계를 구분
 
 ---
 
+## 8. Device Mockup (서비스 소개 화면)  *(랜딩 보강)*
+
+웹/앱 서비스를 소개할 땐 **기기 목업 안에 실제 화면(스크린샷)**을 넣는다.
+
+### 조건 (필수)
+
+- 목업 **안의 화면 이미지는 잘리거나 비는 부분이 없어야 한다.** (crop ✗, 빈 공간 ✗)
+- 보장 원리: 넣는 스크린샷을 **목업 화면 영역과 같은 비율**로 준비한다. 비율이 다르면 `cover`=잘림 / `contain`=빈공간 중 **하나는 반드시** 생긴다.
+- **가장 안전한 기본값:** 화면 영역을 `width:100%; height:auto`로 둬서 **가로를 꽉 채우고 높이는 이미지에 맞춘다** → 잘림 0, 빈공간 0.
+- **웹(브라우저·노트북):** 가로 전체를 꽉 채운다. **좌우가 잘리면 실패.** 세로로 긴 페이지를 고정 높이 창에 넣을 땐 **아래만** 클립(위 정렬), 좌우는 항상 완전.
+- **앱(폰):** 스크린샷을 **기기 화면 비율 그대로** 캡처해 넣는다 → 프레임에 딱 맞아 잘림·빈공간 0.
+- 기기 프레임(브라우저 바·폰 베젤)은 **장식이 아니라 "기기 표현"**이므로 Border·Shadow 금지의 **예외**다. 단 Shadow는 **목업을 띄우는 용도로 1단계**만.
+
+### Source — 브라우저(웹) 목업
+
+```html
+<figure class="mockup mockup--browser">
+  <div class="mockup__bar">
+    <span class="mockup__dot"></span><span class="mockup__dot"></span><span class="mockup__dot"></span>
+    <span class="mockup__url">example.com</span>
+  </div>
+  <div class="mockup__screen">
+    <img src="SCREENSHOT.png" alt="서비스 화면">
+  </div>
+</figure>
+```
+
+```css
+.mockup{max-width:960px;margin:0 auto;border-radius:16px;overflow:hidden;background:#fff;
+  box-shadow:0 24px 60px -30px rgba(20,24,30,.35);}            /* 목업 띄우는 1단계 elevation (예외 허용) */
+.mockup--browser .mockup__bar{display:flex;align-items:center;gap:8px;padding:12px 16px;background:var(--surface-2);}
+.mockup__dot{width:11px;height:11px;border-radius:50%;background:#cbd2db;}
+.mockup__url{margin-left:10px;font-size:13px;color:var(--text-3);background:#fff;border-radius:999px;padding:5px 14px;}
+.mockup__screen{overflow:hidden;background:#fff;}
+/* 핵심: 가로 꽉 + 자연 높이 → 좌우 잘림 0, 빈공간 0 */
+.mockup__screen img{display:block;width:100%;height:auto;}
+
+/* (옵션) 고정 높이 창: 아래만 클립, 좌우는 항상 완전 */
+.mockup__screen--fixed{height:480px;}          /* 또는 aspect-ratio:16/10; */
+.mockup__screen--fixed img{width:100%;height:auto;}  /* 위 정렬 + overflow:hidden로 아래 클립 */
+```
+
+### Source — 폰(앱) 목업
+
+```html
+<figure class="mockup mockup--phone">
+  <div class="mockup__screen"><img src="APP.png" alt="앱 화면"></div>
+</figure>
+```
+
+```css
+.mockup--phone{width:280px;max-width:72vw;margin:0 auto;padding:12px;background:#1A1C20;border-radius:40px;
+  box-shadow:0 24px 60px -30px rgba(20,24,30,.4);}
+.mockup--phone .mockup__screen{border-radius:30px;overflow:hidden;background:#fff;}
+/* 스크린샷을 폰 화면 비율로 캡처해 넣으면 딱 맞음 (잘림·빈공간 0) */
+.mockup--phone .mockup__screen img{display:block;width:100%;height:auto;}
+```
+
+- 반응형: 목업 컨테이너는 `width:100%`(웹) / `max-width` + `vw`(폰)로 두어 작은 화면에서 자동 축소한다.
+- 스크린샷 파일은 **실제 서비스 화면**을 쓰고, **상업용 사용권**을 확인한다. (`7. Imagery` 참고)
+
+---
+
 ## 요약 체크리스트
 
 - [ ] 폰트 2개 이하 · 세리프 없음 · 본문 14px↑
@@ -345,3 +408,4 @@ Neutral Color는 명확한 명도 단계를 만들어 정보의 위계를 구분
 - [ ] 메뉴 가운데 정렬이면 3분할 그리드(1fr auto 1fr)로 진짜 중앙에
 - [ ] 히어로 메시지 + CTA 1개(히어로·끝 반복) + 3초 스캔
 - [ ] 이미지는 상업용 사용권 확인
+- [ ] 기기 목업: 안 화면 잘림·빈공간 0 (비율 일치 / 웹은 가로 꽉·좌우 안 잘림)
