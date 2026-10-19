@@ -268,6 +268,13 @@ Neutral Color는 명확한 명도 단계를 만들어 정보의 위계를 구분
 
 ## 6. Layout & Responsive  *(랜딩 보강)*
 
+### Header / Nav 정렬
+
+- 상단 메뉴 탭을 **가운데 정렬**할 땐, 좌측(로고)·우측(버튼) 폭이 서로 달라도 메뉴가 **페이지 정중앙**에 오게 한다.
+- `justify-content: space-between`(flex)은 좌우 폭 차이 때문에 가운데 메뉴가 **한쪽으로 쏠린다.** → **3분할 그리드**를 쓴다:
+  - `grid-template-columns: 1fr auto 1fr` → 로고 `justify-self:start` / 메뉴 `center` / 액션 `end`
+- 메뉴를 **왼쪽 정렬**로 둘 땐 flex(`space-between`)로 충분하다. (쏠림 문제는 "가운데 정렬"일 때만 생긴다)
+
 ### Content Width
 
 - 본문 콘텐츠 최대폭은 약 `1080–1200px`로 제한하고 가운데 정렬한다.
@@ -335,5 +342,6 @@ Neutral Color는 명확한 명도 단계를 만들어 정보의 위계를 구분
 - [ ] Border·Shadow 지양, 명도차로 구분
 - [ ] Radius 8–20px 통일 · 컴포넌트 Padding 4/8/16/24
 - [ ] 콘텐츠 최대폭 + 섹션 세로 여백 크게 + 모바일 1열
+- [ ] 메뉴 가운데 정렬이면 3분할 그리드(1fr auto 1fr)로 진짜 중앙에
 - [ ] 히어로 메시지 + CTA 1개(히어로·끝 반복) + 3초 스캔
 - [ ] 이미지는 상업용 사용권 확인
