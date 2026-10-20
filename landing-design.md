@@ -344,7 +344,48 @@ Neutral Color는 명확한 명도 단계를 만들어 정보의 위계를 구분
 - **앱(폰):** 스크린샷을 **기기 화면 비율 그대로** 캡처해 넣는다 → 프레임에 딱 맞아 잘림·빈공간 0.
 - 기기 프레임(브라우저 바·폰 베젤)은 **장식이 아니라 "기기 표현"**이므로 Border·Shadow 금지의 **예외**다. 단 Shadow는 **목업을 띄우는 용도로 1단계**만.
 
-### Source — 브라우저(웹) 목업
+### Source A — 실사 기기 프레임 (Litmers 목업 기준, Figma 좌표)
+
+기기 **PNG 프레임 + 화면 슬롯** 구조. (에셋: `mockups/assets/macbook-air.png`, `mockups/assets/iphone16pro-black.png`)
+
+**노트북(웹)** — MacBook Air 프레임. 화면 슬롯 inset `top 8.7% / right 12.94% / bottom 13.04% / left 12.84%` (슬롯 비율 16:10)
+
+```html
+<figure class="mk mk-laptop">
+  <div class="mk-screen"><img src="SCREENSHOT.png" alt="웹 화면"></div>
+  <img class="mk-frame" src="mockups/assets/macbook-air.png" alt="" aria-hidden="true">
+</figure>
+```
+
+```css
+.mk-laptop{position:relative;width:100%;max-width:960px;margin:0 auto;aspect-ratio:3880/2300;}
+.mk-laptop .mk-frame{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;}
+.mk-laptop .mk-screen{position:absolute;top:8.7%;right:12.94%;bottom:13.04%;left:12.84%;overflow:hidden;background:#fff;border-radius:4px;}
+/* 가로 꽉(좌우 안 잘림) + 긴 페이지는 아래만 클립 → 잘림·빈공간 없음 */
+.mk-laptop .mk-screen img{display:block;width:100%;height:100%;object-fit:cover;object-position:top;}
+```
+
+**폰(앱)** — iPhone 16 Pro 프레임. 프레임 오버레이 `top -2.6% / left -6% / w 112% / h 105%` (화면 슬롯 402×874)
+
+```html
+<figure class="mk mk-phone">
+  <div class="mk-screen"><img src="APP.png" alt="앱 화면"></div>
+  <img class="mk-frame" src="mockups/assets/iphone16pro-black.png" alt="" aria-hidden="true">
+</figure>
+```
+
+```css
+.mk-phone{position:relative;width:100%;max-width:300px;margin:0 auto;aspect-ratio:402/874;}
+.mk-phone .mk-screen{position:absolute;inset:0;border-radius:11% / 5%;overflow:hidden;background:#fff;}
+.mk-phone .mk-screen img{display:block;width:100%;height:100%;object-fit:cover;object-position:top;}
+.mk-phone .mk-frame{position:absolute;top:-2.6%;left:-6%;width:112%;height:105%;pointer-events:none;}
+```
+
+- 스크린샷을 **슬롯 비율로 캡처**하면 클립 없이 꽉 맞는다. (앱: 폰 화면 비율 / 웹: 16:10, 더 길면 위 정렬 후 아래만 클립)
+- 앱 스크린샷은 **상태바(시간·배터리)를 포함**해 캡처한다. (프레임은 물리 기기만 표현)
+- 에셋 없이 쓰려면 아래 **Source B (CSS 전용)**.
+
+### Source B — CSS 전용(에셋 불필요) · 브라우저
 
 ```html
 <figure class="mockup mockup--browser">
@@ -373,7 +414,7 @@ Neutral Color는 명확한 명도 단계를 만들어 정보의 위계를 구분
 .mockup__screen--fixed img{width:100%;height:auto;}  /* 위 정렬 + overflow:hidden로 아래 클립 */
 ```
 
-### Source — 폰(앱) 목업
+### Source B — CSS 전용(에셋 불필요) · 폰
 
 ```html
 <figure class="mockup mockup--phone">
